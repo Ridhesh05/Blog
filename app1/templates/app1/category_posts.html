@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category.name }} Posts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .post {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .post h2 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+        .post p {
+            color: #555;
+        }
+        .pagination {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .pagination-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            margin: 0 5px;
+        }
+        .pagination-button:hover {
+            background-color: #0056b3;
+        }
+        .pagination-current {
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .btn a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* Add media query for mobile devices */
+@media screen and (max-width: 768px) {
+    h1 {
+        font-size: 20px; /* Reduce font size for h1 */
+        margin-bottom: 15px; /* Reduce margin bottom for h1 */
+    }
+    .post {
+        padding: 15px; /* Reduce padding for posts */
+        margin-bottom: 15px; /* Reduce margin bottom for posts */
+    }
+    .pagination {
+        margin-top: 20px; /* Reduce margin top for pagination */
+    }
+    .pagination-button,
+    .pagination-current {
+        padding: 8px 16px; /* Reduce padding for pagination buttons */
+    }
+    .btn {
+        padding: 8px 16px; /* Reduce padding for buttons */
+    }
+}
+
+    </style>
+</head>
+<body>
+    <h1>{{ category.name }} Blogs</h1>
+    {% for post in posts %}
+        <div class="post">
+            <h2><a href="{% url 'details' post.id %}">{{ post.title }}</a></h2>
+            <p>{{ post.body|truncatewords_html:30 }}</p>
+            <p>Created on: {{ post.created_on }}</p>
+            <p>Last modified: {{ post.last_modified }}</p>
+        </div>
+    {% endfor %}
+    <div class="pagination">
+        {% if posts.has_previous %}
+            <a href="?page=1" class="pagination-button">&laquo; First</a>
+            <a href="?page={{ posts.previous_page_number }}" class="pagination-button">Previous</a>
+        {% endif %}
+    
+        <span class="pagination-current">
+            Page {{ posts.number }} of {{ posts.paginator.num_pages }}
+        </span>
+    
+        {% if posts.has_next %}
+            <a href="?page={{ posts.next_page_number }}" class="pagination-button">Next</a>
+            <a href="?page={{ posts.paginator.num_pages }}" class="pagination-button">Last &raquo;</a>
+        {% endif %}
+    </div>
+    <p><button class="btn"><a href="{% url 'index' %}">Home</a></button></p>
+</body>
+</html>

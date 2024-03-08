@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Blog</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .categories {
+            margin-bottom: 20px;
+            padding: 0;
+            list-style: none;
+        }
+        .categories li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .categories li a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .post {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .post img {
+            max-width: 100%;
+            border-radius: 4px;
+        }
+        .post h2 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .post a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .post a:hover {
+            text-decoration: underline;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f5faff;
+            color: #0056b3;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+        .btn a {
+            color: #fff;
+            text-decoration: none;
+        }
+        .pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pagination-button {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 0 5px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.pagination-button:hover {
+    background-color: #0056b3;
+}
+
+.pagination-current {
+    background-color: #f5f5f5;
+    color: #333;
+    padding: 8px 12px;
+    border-radius: 5px;
+}
+.search-form {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+}
+
+.search-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+}
+
+.search-button:hover {
+    background-color: #0056b3;
+}
+
+
+.home-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+.action-link {
+            display: inline-block;
+            padding: 8px 20px;
+            margin-top: 10px;
+            background-color: #dc3545; /* Red color for delete */
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-link:hover {
+            background-color: #c82333; /* Darker red color on hover */
+        }
+
+        .create-post-link {
+            background-color: #28a745;
+            margin-bottom: 15px; 
+        }
+
+        .create-post-link:hover {
+            background-color: #218838;
+            
+        }
+        .lower-div {
+            background-color: #333;
+            color: #fff;
+            padding: 50px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .lower-div h3 {
+            margin-bottom: 20px;
+        }
+        .lower-div p {
+            margin-bottom: 30px;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .social-icons a {
+            margin: 0 10px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 24px;
+        }
+        .social-icons a:hover {
+            color: #007bff;
+        }
+        
+        
+    </style>
+</head>
+<body>
+    
+    <form action="{% url 'search' %}" method="GET" class="search-form">
+        <input type="text" name="q" placeholder="Search..." class="search-input">
+        <button type="submit" class="search-button">Search</button>
+    </form>
+    
+
+    <ul class="categories">
+        <li><strong>Categories:</strong></li>
+        {% for category in categories %}
+            <li><button class="btn"><a href="{% url 'category_posts' category.id %}"  style="color:#000000";>{{ category.name }}</a></button></li>
+        {% endfor %}
+        
+    </ul>
+    <hr>
+    {% for post in posts %}
+    <div class="post">
+        <img src="{{ post.image }}" alt="">
+        <h2><a href="{% url 'details' post.id %}">{{ post.title }}</a></h2>
+        <p>{{ post.body|truncatewords_html:30 }}</p>
+        <p>Created on: {{ post.created_on|date:"F j, Y, g:i a" }}</p> 
+        <a href="{% url 'delete_post' post.id %}" class="action-link">Delete</a>
+        
+        <hr>
+    </div>
+    {% endfor %}
+    <div class="pagination">
+        {% if posts.has_previous %}
+            <a href="?page=1" class="pagination-button">&laquo; First</a>
+            <a href="?page={{ posts.previous_page_number }}" class="pagination-button">Previous</a>
+        {% endif %}
+    
+        <span class="pagination-link pagination-current">
+            Page {{ posts.number }} of {{ posts.paginator.num_pages }}
+        </span>
+    
+        {% if posts.has_next %}
+            <a href="?page={{ posts.next_page_number }}" class="pagination-button">Next</a>
+            <a href="?page={{ posts.paginator.num_pages }}" class="pagination-button">&raquo; Last</a>
+        {% endif %}
+    </div>
+    
+    <a href="{% url 'create_post' %}" class="action-link create-post-link">Create New Post</a>
+
+    <div class="lower-div">
+        
+        <h2>Created by <b>Ridhesh.</b></h2>
+        <h3>Connect</h3>
+        <div class="social-icons">
+            <a href="https://github.com/Ridhesh05" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/ridhesh05/" target="_blank"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </div>
+
+    <footer style="background-color: #444; color: #fff; padding: 20px; text-align: center;">
+        <p>&copy; 2024  Website. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>
